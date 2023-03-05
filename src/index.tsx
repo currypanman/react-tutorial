@@ -56,6 +56,7 @@ class Game extends React.Component<GameProps> {
     history: { squares: Array<string> }[],
     stepNumber: number,
     xIsNext: boolean,
+    settings: boolean,
   };
 
   constructor(props: GameProps) {
@@ -66,6 +67,7 @@ class Game extends React.Component<GameProps> {
       }],
       stepNumber: 0,
       xIsNext: true,
+      settings: false,
     };
   }
 
@@ -77,7 +79,6 @@ class Game extends React.Component<GameProps> {
       return;
     }
     squares[i] = this.state.xIsNext ? 'X' : 'O';
-    console.log(squares);
     this.setState({
       history: history.concat([{
         squares: squares,
@@ -94,6 +95,17 @@ class Game extends React.Component<GameProps> {
     });
   }
 
+  openSettings() {
+    this.setState({
+      settings: true,
+    });
+  }
+
+  closeSettings() {
+    this.setState({
+      settings: false,
+    });
+  }
 
   render() {
     const history = this.state.history;
@@ -118,17 +130,33 @@ class Game extends React.Component<GameProps> {
       status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
     }
 
-    return (
-      <div className="game">
-        <div className="game-board">
-          <Board squares={current.squares} onClick={(i) => this.handleClick(i)} />
+    if (this.state.settings) {
+      return (
+        <div className="game">
+          <div className="game-menu">
+            <button onClick={() => this.closeSettings()}>Back</button>
+          </div>
+          <div>
+            This game is not configurable (^_^).
+          </div>
         </div>
-        <div className="game-info">
-          <div>{status}</div>
-          <ol>{moves}</ol>
+      );
+    } else {
+      return (
+        <div className="game">
+          <div className="game-menu">
+            <button onClick={() => this.openSettings()}>Settings</button>
+          </div>
+          <div className="game-board">
+            <Board squares={current.squares} onClick={(i) => this.handleClick(i)} />
+          </div>
+          <div className="game-info">
+            <div>{status}</div>
+            <ol>{moves}</ol>
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
   }
 }
 
