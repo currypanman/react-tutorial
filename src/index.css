@@ -1,5 +1,4 @@
 body {
-  font: 14px "Century Gothic", Futura, sans-serif;
   margin: 20px;
 }
 
@@ -41,8 +40,6 @@ ol, ul {
 }
 
 .game {
-  display: flex;
-  flex-direction: row;
 }
 
 .game-info {

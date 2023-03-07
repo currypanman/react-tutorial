@@ -1,6 +1,13 @@
 import React from 'react';
+import AppBar from '@mui/material/AppBar';
+import Button from '@mui/material/Button';
+import Drawer from '@mui/material/Drawer';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import MoreIcon from '@mui/icons-material/MoreVert';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
 import { Board } from './Board';
-import { Settings } from './Settings';
 
 type GameProps = {
 };
@@ -49,16 +56,18 @@ class Game extends React.Component<GameProps> {
     });
   }
 
-  openSettings() {
-    this.setState({
-      settings: true,
-    });
-  }
+  toggleDrawer(open: boolean) {
+    return (event: React.KeyboardEvent | React.MouseEvent) => {
+      if (event.type === 'keydown' &&
+          ((event as React.KeyboardEvent).key === 'Tab' ||
+           (event as React.KeyboardEvent).key === 'Shift')) {
+        return;
+      }
 
-  closeSettings() {
-    this.setState({
-      settings: false,
-    });
+      this.setState({
+        settings: open,
+      });
+    };
   }
 
   render() {
@@ -72,7 +81,7 @@ class Game extends React.Component<GameProps> {
             'Go to game start';
       return (
         <li key={move}>
-          <button onClick={() => this.jumpTo(move)}>{desc}</button>
+          <Button onClick={() => this.jumpTo(move)}>{desc}</Button>
         </li>
       );
     });
@@ -84,31 +93,53 @@ class Game extends React.Component<GameProps> {
       status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
     }
 
-    if (this.state.settings) {
-      return (
-        <div className="game">
-          <div className="game-menu">
-            <button onClick={() => this.closeSettings()}>Back</button>
-          </div>
-          <Settings />
+    return (
+      <div className="game">
+        <AppBar position="fixed">
+          <Toolbar>
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="open drawer"
+              sx={{ mr: 2 }}
+              onClick={this.toggleDrawer(true)}
+            >
+              <MenuIcon />
+            </IconButton>
+
+            <Typography variant="h6" sx={{ flexGrow: 1 }}>
+              Tic-Tac-Toe
+            </Typography>
+            <IconButton
+              size="large"
+              aria-label="display more actions"
+              edge="end"
+              color="inherit"
+            >
+              <MoreIcon />
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+        <Toolbar />
+        <Drawer
+          anchor={'left'}
+          open={this.state.settings}
+          onClose={this.toggleDrawer(false)}
+        >
+          <Typography>
+            This drawer is still empty (^_^)/
+          </Typography>
+        </Drawer>
+        <div className="game-board">
+          <Board squares={current.squares} onClick={(i) => this.handleClick(i)} />
         </div>
-      );
-    } else {
-      return (
-        <div className="game">
-          <div className="game-menu">
-            <button onClick={() => this.openSettings()}>Settings</button>
-          </div>
-          <div className="game-board">
-            <Board squares={current.squares} onClick={(i) => this.handleClick(i)} />
-          </div>
-          <div className="game-info">
-            <div>{status}</div>
-            <ol>{moves}</ol>
-          </div>
+        <div className="game-info">
+          <div>{status}</div>
+          <ol>{moves}</ol>
         </div>
-      );
-    }
+      </div>
+    );
   }
 }
 
