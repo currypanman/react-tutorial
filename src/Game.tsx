@@ -1,12 +1,5 @@
 import React from 'react';
-import AppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
-import Drawer from '@mui/material/Drawer';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import MoreIcon from '@mui/icons-material/MoreVert';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import { Board } from './Board';
 
 type GameProps = {
@@ -17,7 +10,6 @@ class Game extends React.Component<GameProps> {
     history: { squares: Array<string> }[],
     stepNumber: number,
     xIsNext: boolean,
-    settings: boolean,
   };
 
   constructor(props: GameProps) {
@@ -28,7 +20,6 @@ class Game extends React.Component<GameProps> {
       }],
       stepNumber: 0,
       xIsNext: true,
-      settings: false,
     };
   }
 
@@ -56,20 +47,6 @@ class Game extends React.Component<GameProps> {
     });
   }
 
-  toggleDrawer(open: boolean) {
-    return (event: React.KeyboardEvent | React.MouseEvent) => {
-      if (event.type === 'keydown' &&
-          ((event as React.KeyboardEvent).key === 'Tab' ||
-           (event as React.KeyboardEvent).key === 'Shift')) {
-        return;
-      }
-
-      this.setState({
-        settings: open,
-      });
-    };
-  }
-
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
@@ -95,42 +72,6 @@ class Game extends React.Component<GameProps> {
 
     return (
       <div className="game">
-        <AppBar position="fixed">
-          <Toolbar>
-            <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-              sx={{ mr: 2 }}
-              onClick={this.toggleDrawer(true)}
-            >
-              <MenuIcon />
-            </IconButton>
-
-            <Typography variant="h6" sx={{ flexGrow: 1 }}>
-              Tic-Tac-Toe
-            </Typography>
-            <IconButton
-              size="large"
-              aria-label="display more actions"
-              edge="end"
-              color="inherit"
-            >
-              <MoreIcon />
-            </IconButton>
-          </Toolbar>
-        </AppBar>
-        <Toolbar />
-        <Drawer
-          anchor={'left'}
-          open={this.state.settings}
-          onClose={this.toggleDrawer(false)}
-        >
-          <Typography>
-            This drawer is still empty (^_^)/
-          </Typography>
-        </Drawer>
         <div className="game-board">
           <Board squares={current.squares} onClick={(i) => this.handleClick(i)} />
         </div>
