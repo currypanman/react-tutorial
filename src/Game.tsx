@@ -104,4 +104,4 @@ function calculateWinner(squares: Array<string>) {
   return null;
 }
 
-export { Game };
+export { Game, calculateWinner };
